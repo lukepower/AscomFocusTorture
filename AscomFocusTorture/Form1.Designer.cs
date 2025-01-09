@@ -37,6 +37,7 @@
             this.txtInterval = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonChoose
@@ -109,11 +110,22 @@
             this.listBox1.Size = new System.Drawing.Size(848, 459);
             this.listBox1.TabIndex = 6;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(654, 15);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(177, 17);
+            this.checkBox1.TabIndex = 7;
+            this.checkBox1.Text = "Prevent Move if isMoving is true";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(872, 551);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.txtInterval);
             this.Controls.Add(this.label1);
@@ -139,6 +151,7 @@
         private System.Windows.Forms.TextBox txtInterval;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

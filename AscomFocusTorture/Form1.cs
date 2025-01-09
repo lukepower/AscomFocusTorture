@@ -13,6 +13,8 @@ namespace ASCOM.FocuserDebouncer
 
         private int total_calls;
 
+        private bool waiting_for_move;
+
         public Form1()
         {
             InitializeComponent();
@@ -70,6 +72,7 @@ namespace ASCOM.FocuserDebouncer
                 if (this.timer1.Enabled == false)
                 {
                     this.listBox1.Items.Clear();
+                    this.waiting_for_move = false;
                     this.total_calls = 0;
                     this.listBox1.Items.Add("Started at " + DateTime.Now.ToShortTimeString());
                     this.listBox1.Items.Add(this.driver.Name);
@@ -97,30 +100,48 @@ namespace ASCOM.FocuserDebouncer
 
                     var tmp = this.driver.IsMoving;
                     var tmp2 = this.driver.Temperature;
+                    var tmp3 = this.driver.Position;
 
-                    if (count_ticks == 10)
+
+                    if (count_ticks >= 10 )
                     {
-                        // Move position
-                        if (this.driver.Position > this.start_position)
+                        if (this.checkBox1.Checked && this.driver.IsMoving)
                         {
-                            this.driver.Move(this.start_position - 100);
+                            if (this.waiting_for_move == false)
+                            {
+
+
+                                this.listBox1.Items.Add("Still moving, will not send a new move command");
+                            }
+
+                            this.waiting_for_move = true;
                         }
                         else
                         {
-                            this.driver.Move(this.start_position + 100);
+                            this.waiting_for_move = false;
+
+                            // Move position
+                            if (this.driver.Position > this.start_position)
+                            {
+                                this.driver.Move(this.start_position - 100);
+                            }
+                            else
+                            {
+                                this.driver.Move(this.start_position + 100);
+                            }
+                            count_ticks = 0;
+                            this.listBox1.Items.Add(DateTime.Now.ToLongTimeString() + ": Position: " + this.driver.Position.ToString() + ", IsMoving: " + tmp.ToString() + ", Temperature: " + tmp2.ToString() + " ( done 10 calls in between)");
                         }
-                        count_ticks = 0;
-                        this.listBox1.Items.Add(DateTime.Now.ToShortTimeString() + ": Position: " + this.driver.Position.ToString() + ", IsMoving: " + tmp.ToString() + ", Temperature: " + tmp2.ToString() + " ( done 10 calls in between)");
-                    }
+                        }
                     this.total_calls++;
                 } catch (Exception ex)
                 {
                     this.timer1.Enabled = false;
                     this.listBox1.Items.Add(ex.Message + " (total calls " + this.total_calls.ToString() + ")");
                 }
+                
+                this.listBox1.SelectedIndex = this.listBox1.Items.Count - 1;
 
-                
-                
                 // Move position up a little
             }
         }
